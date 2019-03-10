@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rain tarkvara tehnoloogiad</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- read in javascript libraries for parsing csv: https://github.com/okfn/csv.js  -->
+    <script src="jquery.js"></script> 
+    <script src="csv.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="background-image">
+      <h1>See on 14.02.2014 Rain Kaarjas csv faili töötlemise demo</h1>
+
+      <h4>Antud lahendus imiteerib pöörmekütte juhtimist Tallinn-Väike jaamas</h4>
+  
+      Sisesta pöörmekütte olekut kontrolliv aeg:
+      <input type="text" id="filter" onkeydown="filtreeri()">
+      <button type="button" onclick="filtreeri()">filtreeri!</button> 
+  
+      <br><br>
+  
+      Sisesta pöörmekütte sisselülitamise temperatuur:
+      <input type="number" id="temp" value="3">
+      <button type="button" onclick="sisesta()">sisesta!</button> 
+  
+    <div class="table">
+        <p class="jooksev-aeg">Jooksev aeg <i class="fas fa-arrow-right"></i></p>
+        <p class="kaks-tundi"><i class="fas fa-arrow-left"></i> 2 tundi</p>
+        <p class="neli-tundi"><i class="fas fa-arrow-left"></i> 4 tundi</p>
+        <div id="result"></div>
+    </div>
+      
+    <p>Andmed võetakse csv failist <a href="csvfinal.csv">csvfinal.csv</a>.</p>
+  
+    Programm kasutab <a href="https://gihub.com/okfn/csv.js">csv.jsv</a> teeki csv faili parsimiseks ja siis siin 
+    lehe lähtekoodis olev meie oma <tt>processdata</tt> programm, mida saad ise edasi ehitada
+    </div>
+
+  <script>
+    var sisu;
+    var temp=document.getElementById("temp").value;
+
+    function processdata(rows) {
+      
+      var rownr, colnr, row, el;
+      var result;
+      
+      // build the result html string
+      result="<table>";
+      result=result+"<thead><td>Kuupäev</td><td>Temperatuur</td><td>Sademed</td><td>Staatus</td></thead>";
+      // loop over all rows
+      for(rownr=0; rownr<rows.length; rownr++) {    
+        row=rows[rownr];
+      if (!sisu || row[0].match(sisu)) {
+        result=result+"\n<tr>";	
+        // loop over columns in one row
+        for(colnr=0; colnr<row.length; colnr++) {
+          el=row[colnr];		  
+          if (rownr==0) {
+            result=result+"<td>"+el+"</td>"; 
+          } else {
+            result=result+"<td>"+el+"</td>";
+          }
+        }
+        //if(rownr != 0){
+          if(Number(row[1]) <= temp && row[2] == 1){
+            result=result+"<td class='red'>Sees</td>";
+          }
+          else{
+            result=result+"<td class='green'>Väljas</td>";
+          }
+        /*} else {
+          //result=result+"<th>Staatus</th>";
+        }*/
+        result=result+"</tr>";
+        }
+      }
+      // put the result html string into the div on the page
+      console.log(result);
+      document.getElementById("result").innerHTML=result;
+    }
+
+    function filtreeri() {
+      sisu=document.getElementById("filter").value;  
+      drawdata();
+    }
+
+    function sisesta() {
+      temp=document.getElementById("temp").value;
+      drawdata();
+      console.log(temp);
+    }
+    function drawdata() {
+      CSV.fetch({
+        // several options to give input, by default we use the file data.csv
+        url: 'csvfinal.csv'
+      }
+      ).done(function(dataset) {  
+        // console.log(dataset); // optional debugging    
+        var allrows;
+        // put the dataset field list and dataset records into one array of all rows
+        allrows=dataset.records;
+        allrows.unshift(dataset.fields);  
+        // call our program for building html
+        processdata(allrows);
+      });
+    }
+    
+    CSV.fetch({
+        url: 'csvfinal.csv'
+      }
+    ).done(function(dataset) {  
+      // console.log(dataset); // optional debugging    
+      var allrows;
+      // put the dataset field list and dataset records into one array of all rows
+      allrows=dataset.records;
+      allrows.unshift(dataset.fields);  
+      // call our program for building html
+      processdata(allrows);
+    });
+
+  </script>
+
+  <script>
+    function wheel($div,deltaY){
+      var step = 1;
+      var pos = $div.scrollTop();
+      var nextPos = pos + (step*(-deltaY))
+      console.log("DelatY: " + deltaY + ", Step: " + step + ", nextPos: " + nextPos);
+      $div.scrollTop(nextPos);
+    }
+
+    $('table').bind('mousewheel', function(event, delta, deltaX, deltaY) {
+        wheel($(this),deltaY);
+        event.preventDefault();
+    });
+  </script>
+  </body>
+</html>

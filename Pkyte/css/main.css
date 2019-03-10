@@ -1,0 +1,94 @@
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+body{
+    margin: 0;
+}
+h1{
+    margin: 0;
+    padding: 1rem;
+}
+body .background-image{
+    display: block;
+    position: relative;
+    padding: 1rem;
+}
+body .background-image::after{
+    position: relative;
+    height: 100vh;
+    background-image: url('../Jaam.jpg');
+    background-position: left center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    content: "";
+    opacity: .3;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1; 
+}
+table{
+    border-collapse: collapse;
+    font-size: 10px;
+    text-align: right;
+    background-color: white;
+}
+table, th, td {
+    border: 1px solid black;
+    padding: 4px;
+}
+thead tr:first-child { 
+    font-weight: bold;
+    text-align: center;
+}
+.green{
+    background-color: green;
+}
+.red{
+    background-color: red;
+}
+#result{
+    height: 501px;
+    width: 255px;
+    overflow-y: scroll;
+}
+.table{
+    position: relative;
+    margin-left: 200px;
+    margin-top: 20px;
+}
+.table p.jooksev-aeg{
+    position: absolute;
+    top: 40px;
+    left: -130px;
+    font-size: 20px;
+}
+.table p.kaks-tundi{
+    position: absolute;
+    top: 121px;
+    left: 262px;
+    font-size: 20px;
+}
+
+.table p.neli-tundi{
+    position: absolute;
+    top: 200px;
+    left: 262px;
+    font-size: 20px;
+}
+
+thead tr td{
+    border: 1px solid black;
+    position: sticky;
+    top: 0;
+    z-index: 70;
+    background: white;
+}
+.table p i{
+    font-size: 20px;
+}
